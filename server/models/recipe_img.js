@@ -4,8 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     r_id: DataTypes.INTEGER,
     img_id: DataTypes.INTEGER
   }, {});
+
   Recipe_Img.associate = function(models) {
-    // associations can be defined here
+    Recipe_Img.belongsTo(models.Recipe, {
+      foreignKey: 'r_id',
+      onDelete: 'CASCADE',
+    });
+
+    Recipe_Img.belongsTo(models.Image, {
+      foreignKey: 'img_id',
+      onDelete: 'CASCADE',
+    });
   };
   return Recipe_Img;
 };

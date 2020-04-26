@@ -5,8 +5,17 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     rating: DataTypes.INTEGER
   }, {});
+
   Rating.associate = function(models) {
-    // associations can be defined here
+    Rating.belongsTo(models.Recipe, {
+      foreignKey: 'r_id',
+      onDelete: 'CASCADE',
+    });
+
+    Rating.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      onDelete: 'CASCADE',
+    });
   };
   return Rating;
 };

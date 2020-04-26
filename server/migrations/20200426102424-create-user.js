@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      password: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       firstName: {
         type: Sequelize.STRING
       },
@@ -19,6 +23,18 @@ module.exports = {
       },
       nickname: {
         type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.STRING
+      },
+      resetPasswordToken: {
+        type: Sequelize.STRING
+      },
+      resetPasswordExpires: {
+        type: Sequelize.DATE
+      },
+      lastLogin: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

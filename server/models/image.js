@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     path: DataTypes.STRING
   }, {});
   Image.associate = function(models) {
-    // associations can be defined here
+    Image.belongsTo(models.Recipe, {
+      foreignKey: 'r_id',
+      onDelete: 'CASCADE',
+    });
   };
   return Image;
 };

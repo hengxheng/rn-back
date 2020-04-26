@@ -6,8 +6,12 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     content: DataTypes.STRING
   }, {});
+
   Recipe.associate = function(models) {
-    // associations can be defined here
+    Recipe.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      onDelete: 'CASCADE',
+    });
   };
   return Recipe;
 };
