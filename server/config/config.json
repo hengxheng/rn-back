@@ -1,0 +1,27 @@
+{
+    "development": {
+      "username": "root",
+      "password": "1234",
+      "database": "recipe",
+      "logging": true,
+      "host": "db",
+      "dialect": "mysql",
+      "operatorsAliases": false
+    },
+    "test": {
+      "username": "root",
+      "password": "1234",
+      "database": "recipe",
+      "host": "db",
+      "dialect": "mysql",
+      "operatorsAliases": false
+    },
+    "production": {
+      "username": "ts",
+      "password": "PH34pSNQsdDC7PK",
+      "database": "recipe",
+      "host": "ts-dev.caexr4plss61.ap-southeast-2.rds.amazonaws.com",
+      "dialect": "mysql",
+      "operatorsAliases": false
+    }
+  }
