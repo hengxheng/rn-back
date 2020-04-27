@@ -3,8 +3,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import passport from 'passport';
 
-
+require('./passport');
 const app = express();
 
 // adding Helmet to enhance your API's security
@@ -20,11 +21,17 @@ app.use(cors());
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
 
+//passport
+app.use(passport.initialize());
+
 //routes
 require('./routes/user/getUsers')(app);
-
+require('./routes/user/login')(app);
+require('./routes/user/register')(app);
 
 // starting the server
 app.listen(3000, () => {
   console.log('listening on port 3000');
 });
+
+module.exports = app;
