@@ -1,11 +1,11 @@
 import passport from "passport";
 import Models from "../../../models";
 
-const User = Models.User;
 const Recipe = Models.Recipe;
-
 module.exports = (app) => {
-  app.post("recipe/add", (req, res, next) => {
+  console.log("hd");
+  app.post("/recipe/add", (req, res, next) => {
+    console.log(req.body);
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) {
         console.error(err);
@@ -14,6 +14,7 @@ module.exports = (app) => {
         console.error(info.message);
         res.status(403).send(info.message);
       } else {
+        console.log(req.body);
         const data = {
           user_id: user.id,
           hashCode: "ssss",
