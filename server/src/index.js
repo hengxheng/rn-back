@@ -29,6 +29,8 @@ require('./routes/user/getUsers')(app);
 require('./routes/user/login')(app);
 require('./routes/user/register')(app);
 
+require('./routes/user/updateUser')(app);
+
 require('./routes/recipe/getRecipes')(app);
 require('./routes/recipe/addRecipe')(app);
 

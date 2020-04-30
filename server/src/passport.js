@@ -1,14 +1,19 @@
 import bcrypt from "bcrypt";
 import passport from "passport";
 import Models from "../models";
+import passportGoogle from "passport-google-oauth";
+import passportLocal from "passport-local";
+import passportJWT from "passport-jwt";
 
-const LocalStrategy = require("passport-local").Strategy;
-const JWTstrategy = require("passport-jwt").Strategy;
-const ExtractJWT = require("passport-jwt").ExtractJwt;
+const LocalStrategy = passportLocal.Strategy;
+const JWTstrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+const GoogleStrategy = passportGoogle.OAuth2Strategy;
+
 const User = Models.User;
 const BCRYPT_SALT_ROUNDS = 12;
 
-require('dotenv').config();
+require("dotenv").config();
 
 passport.use(
   "register",
@@ -17,26 +22,26 @@ passport.use(
       usernameField: "email",
       passwordField: "password",
       passReqToCallback: true,
-      session: false
+      session: false,
     },
     (req, username, password, done) => {
       try {
         console.log(username);
         User.findOne({
           where: {
-            email: username
-          }
-        }).then(user => {
+            email: username,
+          },
+        }).then((user) => {
           if (user != null) {
             return done(null, false, {
-              message: "username or email already taken"
+              message: "username or email already taken",
             });
           }
-          bcrypt.hash(password, BCRYPT_SALT_ROUNDS).then(hashedPassword => {
+          bcrypt.hash(password, BCRYPT_SALT_ROUNDS).then((hashedPassword) => {
             User.create({
               email: req.body.email,
               password: hashedPassword,
-            }).then(user => {
+            }).then((user) => {
               return done(null, user);
             });
           });
@@ -54,19 +59,19 @@ passport.use(
     {
       usernameField: "email",
       passwordField: "password",
-      session: false
+      session: false,
     },
     (username, password, done) => {
       try {
         User.findOne({
           where: {
-            email: username
+            email: username,
           },
-        }).then(userInfo => {
+        }).then((userInfo) => {
           if (userInfo === null) {
             return done(null, false, { message: "bad username" });
           }
-          bcrypt.compare(password, userInfo.password).then(response => {
+          bcrypt.compare(password, userInfo.password).then((response) => {
             if (response !== true) {
               return done(null, false, { message: "passwords do not match" });
             }
@@ -84,7 +89,7 @@ passport.use(
 
 const opts = {
   jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("JWT"),
-  secretOrKey: process.env.JWT_SECRET
+  secretOrKey: process.env.JWT_SECRET,
 };
 
 passport.use(
@@ -94,9 +99,9 @@ passport.use(
       //need to include roles and perhaps permission
       User.findOne({
         where: {
-          id: jwt_payload.id
+          id: jwt_payload.id,
         },
-      }).then(userInfo => {
+      }).then((userInfo) => {
         if (userInfo) {
           console.log("user found in db in passport");
           done(null, userInfo);
@@ -110,3 +115,15 @@ passport.use(
     }
   })
 );
+
+const googleStrategyOptions = {
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: `${process.env.SERVER_API_URL}/auth/google/callback`,
+};
+
+const verifyCallback = async (accessToken, refreshToken, profile, done) => {
+  // TODO
+};
+
+passport.use(new GoogleStrategy(googleStrategyOptions, verifyCallback));

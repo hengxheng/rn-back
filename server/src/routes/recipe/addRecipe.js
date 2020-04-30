@@ -3,7 +3,6 @@ import Models from "../../../models";
 
 const Recipe = Models.Recipe;
 module.exports = (app) => {
-  console.log("hd");
   app.post("/recipe/add", (req, res, next) => {
     console.log(req.body);
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
