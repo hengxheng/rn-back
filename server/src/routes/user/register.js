@@ -25,7 +25,7 @@ module.exports = app => {
           const data = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            nickname: req.body.nickname,
+            nickname: Math.random().toString(36).substr(2, 9),
             email: req.body.email
           };
       
