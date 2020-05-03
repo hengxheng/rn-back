@@ -9,7 +9,7 @@ require('./passport');
 const app = express();
 
 // adding Helmet to enhance your API's security
-app.use(helmet());
+// app.use(helmet());
 
 // using bodyParser to parse JSON bodies into JS objects
 app.use(bodyParser.json());
@@ -30,6 +30,7 @@ require('./routes/user/login')(app);
 require('./routes/user/register')(app);
 
 require('./routes/user/updateUser')(app);
+require('./routes/user/uploadUserImage')(app);
 
 require('./routes/recipe/getRecipes')(app);
 require('./routes/recipe/addRecipe')(app);

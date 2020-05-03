@@ -1,9 +1,12 @@
 import passport from "passport";
 import Models from "../../../models";
+import multer from "multer";
+import bcrypt from "bcrypt";
 
+const BCRYPT_SALT_ROUNDS = 12;
 const User = Models.User;
 module.exports = (app) => {
-  app.put("/user/update/:userId", (req, res, next) => {
+  app.post("/user/update/:userId", (req, res, next) => {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) {
         console.error(err);
@@ -16,22 +19,28 @@ module.exports = (app) => {
           where: {
             id: req.params.userId,
           },
-        }).then((userInfo) => {
+        }).then(async (userInfo) => {
+          let updateData = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            nickname: req.body.nickname,
+            email: req.body.email,
+          };
           
+          console.log(updateData);
+          if(req.body.password){
+            const hashedPassword = await bcrypt.hash(req.body.password, BCRYPT_SALT_ROUNDS);
+            updateData = { ...updateData, password: hashedPassword }
+          }
+      
           if (userInfo != null) {
             userInfo
-              .update({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                nickname: req.body.nickname,
-                email: req.body.email,
-              })
+              .update(updateData)
               .then(() => {
-                res.status(200).send({ auth: true, user: user, message: "user updated" });
+                res.status(200).send({ auth: true, user: userInfo, message: "Your details are updated." });
               });
           } else {
-            console.error("no user exists in db to update");
-            res.status(401).send({ auth: true, user: null, message:"no user exists in db to update"});
+            res.status(401).send({ auth: true, user: null, message:"Your account does not exists."});
           }
         });
       }
