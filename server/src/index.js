@@ -24,6 +24,8 @@ app.use(morgan('combined'));
 //passport
 app.use(passport.initialize());
 
+app.use(express.static('public'));
+
 //routes
 require('./routes/user/getUsers')(app);
 require('./routes/user/login')(app);
