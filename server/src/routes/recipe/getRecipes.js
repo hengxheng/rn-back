@@ -4,7 +4,7 @@ import Models from "../../../models";
 const Recipe = Models.Recipe;
 const RecipeImage = Models.RecipeImage;
 const Tag = Models.Tag;
-
+const User = Models.User;
 module.exports = (app) => {
   app.get("/recipes", (req, res, next) => {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
@@ -23,6 +23,9 @@ module.exports = (app) => {
             {
               model: Tag,
             },
+            {
+              model: User,
+            },
           ],
           // where:{
           //     status: 'Actived',
@@ -32,7 +35,6 @@ module.exports = (app) => {
             // ["name", "ASC"],
           ],
         }).then((recipes) => {
-            recipes.map( (r) => console.log(r.createdAt));
           res.status(200).send({ auth: true, data: recipes });
         });
       } else {
