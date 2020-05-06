@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Tag = sequelize.define('Tag', {
     slug: DataTypes.STRING,
-    name: DataTypes.INTEGER
+    name: DataTypes.STRING,
   }, {});
   Tag.associate = function(models) {
     // associations can be defined here

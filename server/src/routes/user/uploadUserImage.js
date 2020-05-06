@@ -4,7 +4,6 @@ import Models from "../../../models";
 
 const User = Models.User;
 module.exports = (app) => {
-  
   const filePath = "uploads/profiles";
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -34,13 +33,11 @@ module.exports = (app) => {
             .send({ filePath: _filePath, message: "Your image is updated." });
         });
       } else {
-        res
-          .status(401)
-          .send({
-            auth: true,
-            user: null,
-            message: "Your account does not exists.",
-          });
+        res.status(401).send({
+          auth: true,
+          user: null,
+          message: "Your account does not exists.",
+        });
       }
     });
   });

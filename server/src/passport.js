@@ -26,7 +26,6 @@ passport.use(
     },
     (req, username, password, done) => {
       try {
-        console.log(username);
         User.findOne({
           where: {
             email: username,

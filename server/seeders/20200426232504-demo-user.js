@@ -21,7 +21,7 @@ module.exports = {
           id: 2,
           firstName: faker.name.firstName(),
           lastName: faker.name.lastName(),
-          email: "zou1@gmail.com",
+          email: "1",
           nickname: faker.name.firstName(),
           password:
             "$2b$12$xIuMyjy/0a9UjkZiwGC6wuzs8pIAQkv9cp01TkF26IgVgfU.FpMby", //1234
