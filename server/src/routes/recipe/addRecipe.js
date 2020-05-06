@@ -5,8 +5,7 @@ import multer from "multer";
 const Recipe = Models.Recipe;
 const Tag = Models.Tag;
 const Recipe_Tag = Models.Recipe_Tag;
-const Image = Models.Image;
-const Recipe_Image = Models.Recipe_Img;
+const RecipeImage = Models.RecipeImage;
 
 module.exports = (app) => {
   app.post("/recipe/add", (req, res, next) => {
@@ -102,27 +101,18 @@ module.exports = (app) => {
                     });
                   });
 
-                  Image.bulkCreate(images).then(async (imgs) => {
-                    const recipeImage = [];
-                    imgs.map((i) => {
-                      recipeImage.push({
-                        r_id: recipe.id,
-                        img_id: i.id,
-                      });
-                    });
-                    await Recipe_Image.destroy({
-                      where: { r_id: recipe.id },
-                    }).then(() => {
-                      Recipe_Image.bulkCreate(recipeImage);
-                    });
+                  await RecipeImage.destroy({
+                    where: { r_id: recipe.id },
+                  }).then(() => {
+                    RecipeImage.bulkCreate(images);
                   });
                 }
-              });
 
-              res.status(200).send({
-                auth: true,
-                message: "Recipe is created",
-                data: recipe,
+                res.status(200).send({
+                  auth: true,
+                  message: "Recipe is created",
+                  data: recipe,
+                });
               });
             } catch (e) {
               console.log(e);

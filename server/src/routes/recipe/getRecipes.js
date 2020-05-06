@@ -18,6 +18,7 @@ module.exports = (app) => {
                     //     status: 'Actived',
                     // }
                 }).then( (recipes) => {
+                    console.log(recipes);
                     res.status(200).send({ auth: true, data: recipes });
                 });
             }
