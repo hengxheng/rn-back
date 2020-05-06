@@ -1,23 +1,31 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  const User = sequelize.define(
+    "User",
+    {
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+      email: DataTypes.STRING,
+      nickname: DataTypes.STRING,
+      image: DataTypes.STRING,
+      resetPasswordToken: DataTypes.STRING,
+      resetPasswordExpires: DataTypes.DATE,
+      lastLogin: DataTypes.DATE,
+      refreshToken: DataTypes.STRING,
+      status: DataTypes.STRING,
     },
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    nickname: DataTypes.STRING,
-    image: DataTypes.STRING,
-    resetPasswordToken: DataTypes.STRING,
-    resetPasswordExpires: DataTypes.DATE,
-    lastLogin:  DataTypes.DATE,
-    refreshToken: DataTypes.STRING,
-    status: DataTypes.STRING,
-  }, {});
-  User.associate = function(models) {
-    // associations can be defined here
+    {}
+  );
+
+  User.associate = function (models) {
+    User.hasMany(models.Recipe, {
+      foreignKey: "user_id",
+      sourceKey: "id",
+    });
   };
   return User;
 };
