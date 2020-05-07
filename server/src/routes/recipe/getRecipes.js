@@ -5,8 +5,9 @@ const Recipe = Models.Recipe;
 const RecipeImage = Models.RecipeImage;
 const Tag = Models.Tag;
 const User = Models.User;
+const perPage = 8;
 module.exports = (app) => {
-  app.get("/recipes", (req, res, next) => {
+  app.get("/recipes/:page", (req, res, next) => {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) {
         console.log(err);
@@ -15,6 +16,10 @@ module.exports = (app) => {
         console.log(info.message);
         res.status(401).send(info.message);
       } else if (user.id) {
+
+        const currentPage = req.params.page? parseInt(req.params.page) : 0;
+        const offset = currentPage*perPage;
+        console.log("OFFEST: "+offset);
         Recipe.findAll({
           include: [
             {
@@ -31,11 +36,14 @@ module.exports = (app) => {
           //     status: 'Actived',
           // }
           order: [
-            ["createdAt", "DESC"],
-            // ["name", "ASC"],
+            ['createdAt', 'DESC'],
+            ["id", "DESC"],
           ],
+          offset: offset,
+          limit: perPage,
         }).then((recipes) => {
-          res.status(200).send({ auth: true, data: recipes });
+            console.log(recipes.length);
+          res.status(200).send({ auth: true, data: recipes, currentPage: currentPage });
         });
       } else {
         res.status(403).send("username and jwt token do not match");
