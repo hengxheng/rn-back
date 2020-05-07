@@ -3,3 +3,4 @@ server/.env
 docker/data
 app
 public
+note.txt

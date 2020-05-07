@@ -37,6 +37,8 @@ require('./routes/user/uploadUserImage')(app);
 require('./routes/recipe/getRecipes')(app);
 require('./routes/recipe/addRecipe')(app);
 
+require('./routes/recipe/getUserRecipes')(app);
+
 // starting the server
 app.listen(3000, () => {
   console.log('listening on port 3000');
