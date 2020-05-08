@@ -36,7 +36,7 @@ module.exports = (app) => {
           //     status: 'Actived',
           // }
           order: [
-            ['createdAt', 'DESC'],
+            ['updatedAt', 'DESC'],
             ["id", "DESC"],
           ],
           offset: offset,

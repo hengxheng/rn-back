@@ -31,88 +31,101 @@ module.exports = (app) => {
 
         const upload = multer({ storage: storage }).array("images", 10);
 
-        upload(req, res, function (err) {
+        upload(req, res, async function (err) {
           if (err) {
             return res.status(500).json(err);
           } else {
-            const data = {
-              user_id: user.id,
-              hashCode: (req.body.title + " " + user.id)
-                .toLowerCase()
-                .replace(/[^\w ]+/g, "")
-                .replace(/ +/g, "-"),
-              title: req.body.title,
-              content: req.body.content,
-            };
-
             try {
-              Recipe.create(data).then(async (recipe) => {
-                //update tags
-                if (req.body.tags) {
-                  const tags = JSON.parse(req.body.tags);
-                  let tagIds = [];
-                  await tags.map(async (tag) => {
+              let recipe = null;
+
+              if (req.body.id) {
+                recipe = await Recipe.findOne({
+                  where: { id: req.body.id },
+                });
+                if (recipe) {
+                  recipe.title = req.body.title;
+                  recipe.content = req.body.content;
+                  await recipe.save();
+                }
+              } else {
+                recipe = await Recipe.create({
+                  user_id: user.id,
+                  hashCode: (req.body.title + " " + user.id)
+                    .toLowerCase()
+                    .replace(/[^\w ]+/g, "")
+                    .replace(/ +/g, "-"),
+                  title: req.body.title,
+                  content: req.body.content,
+                });
+              }
+
+              //update tags
+              if (req.body.tags) {
+                const tags = JSON.parse(req.body.tags);
+
+                //async map function to get ids
+                const getTagIds = async () => {
+                  return Promise.all(tags.map(async (tag) => {
                     let tagName = tag.toLowerCase();
                     const tagObj = await Tag.findOne({
                       where: { name: tagName },
                     });
-                    let _tag = null;
-                    if (!tagObj) {
-                      _tag = await Tag.create({
-                        name: tagName,
-                        slug: tagName
-                          .replace(/[^\w ]+/g, "")
-                          .replace(/ +/g, "-"),
-                      });
-                    } else {
-                      _tag = tagObj;
+  
+                    if(tagObj){
+                      return tagObj.id;
                     }
-
-                    tagIds.push(_tag.id);
-                  });
-
-                  if (tagIds) {
-                    await Recipe_Tag.destroy({
-                      where: {
-                        r_id: recipe.id,
-                      },
-                    }).then(() => {
-                      const recipeTag = [];
-                      tagIds.map((tag_id) => {
-                        recipeTag.push({
-                          r_id: recipe.id,
-                          tag_id: tag_id,
-                        });
+                    else{
+                      const _tag = await Tag.create({
+                        name: tagName,
+                        slug: tagName.replace(/[^\w ]+/g, "").replace(/ +/g, "-"),
                       });
-
-                      Recipe_Tag.bulkCreate(recipeTag);
-                    });
-                  }
+                      return _tag.id;
+                    }
+                  }));
                 }
+                let tagIds = await getTagIds();
 
-                //upload images
-                if (req.files) {
-                  const images = [];
-                  req.files.map((file) => {
-                    images.push({
+                if (tagIds) {
+                  Recipe_Tag.destroy({
+                    where: {
                       r_id: recipe.id,
-                      user_id: user.id,
-                      path: file.path.replace("public/", ""),
+                    },
+                  }).then(async () => {
+                    const recipeTag = [];
+                    tagIds.map((tag_id) => {
+                      recipeTag.push({
+                        r_id: recipe.id,
+                        tag_id: tag_id,
+                      });
                     });
-                  });
 
-                  await RecipeImage.destroy({
-                    where: { r_id: recipe.id },
-                  }).then(() => {
-                    RecipeImage.bulkCreate(images);
+                    await Recipe_Tag.bulkCreate(recipeTag);
                   });
                 }
+              }
 
-                res.status(200).send({
-                  auth: true,
-                  message: "Recipe is created",
-                  data: recipe,
+              //upload images
+              if (req.files) {
+                const images = [];
+                req.files.map((file) => {
+                  images.push({
+                    r_id: recipe.id,
+                    user_id: user.id,
+                    path: file.path.replace("public/", ""),
+                  });
                 });
+
+                await RecipeImage.destroy({
+                  where: { r_id: recipe.id },
+                }).then(() => {
+                  RecipeImage.bulkCreate(images);
+                });
+              }
+
+              res.status(200).send({
+                auth: true,
+                message: "Recipe is created",
+                data: recipe,
               });
             } catch (e) {
               console.log(e);

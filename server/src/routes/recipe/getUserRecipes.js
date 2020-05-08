@@ -32,7 +32,7 @@ module.exports = (app) => {
               user_id: parseInt(req.params.userId),
           },
           order: [
-            ['createdAt', 'DESC'],
+            ['updatedAt', 'DESC'],
             ["id", "DESC"],
           ],
           offset: offset,
