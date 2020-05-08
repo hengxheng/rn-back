@@ -18,7 +18,7 @@ module.exports = (app) => {
       } else if (user.id) {
         const currentPage = req.params.page? parseInt(req.params.page) : 0;
         const offset = currentPage*perPage;
-        console.log("OFFEST: "+offset);
+
         Recipe.findAll({
           include: [
             {

@@ -4,10 +4,9 @@ import Models from "../../../models";
 const Recipe = Models.Recipe;
 const RecipeImage = Models.RecipeImage;
 const Tag = Models.Tag;
-const User = Models.User;
-const perPage = 8;
+
 module.exports = (app) => {
-  app.get("/recipes/:page", (req, res, next) => {
+  app.get("/recipe/:id", (req, res, next) => {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) {
         console.log(err);
@@ -16,11 +15,7 @@ module.exports = (app) => {
         console.log(info.message);
         res.status(401).send(info.message);
       } else if (user.id) {
-
-        const currentPage = req.params.page? parseInt(req.params.page) : 0;
-        const offset = currentPage*perPage;
-
-        Recipe.findAll({
+        Recipe.findOne({
           include: [
             {
               model: RecipeImage,
@@ -28,22 +23,13 @@ module.exports = (app) => {
             {
               model: Tag,
             },
-            {
-              model: User,
-            },
           ],
-          // where:{
-          //     status: 'Actived',
-          // }
-          order: [
-            ['updatedAt', 'DESC'],
-            ["id", "DESC"],
-          ],
-          offset: offset,
-          limit: perPage,
-        }).then((recipes) => {
-            console.log(recipes.length);
-          res.status(200).send({ auth: true, data: recipes, currentPage: currentPage });
+          where:{
+              id: parseInt(req.params.id),
+          },
+        }).then((recipe) => {
+
+          res.status(200).send({ auth: true, data: recipe });
         });
       } else {
         res.status(403).send("username and jwt token do not match");
