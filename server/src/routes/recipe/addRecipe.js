@@ -105,7 +105,7 @@ module.exports = (app) => {
               }
 
               //upload images
-              if (req.files) {
+              if (req.files.length >0) {
                 const images = [];
                 req.files.map((file) => {
                   images.push({

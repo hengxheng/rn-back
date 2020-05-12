@@ -14,12 +14,7 @@ module.exports = (app) => {
         console.error(`error ${err}`);
       }
       if (info !== undefined) {
-        console.error(info.message);
-        if (info.message === "bad username") {
-          res.status(401).send(info.message);
-        } else {
-          res.status(403).send(info.message);
-        }
+        res.status(401).send(info.message);
       } else {
         req.logIn(user, () => {
           User.findOne({
@@ -28,28 +23,14 @@ module.exports = (app) => {
             },
           }).then((userInfo) => {
             if (userInfo != null) {
-              //   const user = Object.assign(
-              //     {},
-              //     {
-              //       uid: userInfo.uid,
-              //       cid: userInfo.cid,
-              //       FirstName: userInfo.FirstName,
-              //       LastName: userInfo.LastName,
-              //       phone: userInfo.phone,
-              //       email: userInfo.email,
-              //       role: userInfo.Users_Roles.map(ur => {
-              //         return ur.Role.RoleName;
-              //       })
-              //     }
-              //   );
               const token = jwt.sign({ id: userInfo.id }, jwtSecret, {
-                expiresIn: 60 * 60,
+                expiresIn: 60 * 60 * 24 * 7,  // 7 days
               });
               res.status(200).send({
                 auth: true,
                 token,
                 user: userInfo,
-                message: "user found & logged in",
+                message: "Authenticated",
               });
             }
           });

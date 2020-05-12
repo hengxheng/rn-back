@@ -44,7 +44,7 @@ module.exports = app => {
               .then(() => {
                 console.log('user created in db');
                 const token = jwt.sign({ id: user.uid }, jwtSecret, {
-                  expiresIn: 60 * 60,
+                  expiresIn: 60 * 60 * 24 * 7,
                 });
                 res.status(200).send({
                   auth: true,
