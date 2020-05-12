@@ -42,7 +42,6 @@ module.exports = (app) => {
           offset: offset,
           limit: perPage,
         }).then((recipes) => {
-            console.log(recipes.length);
           res.status(200).send({ auth: true, data: recipes, currentPage: currentPage });
         });
       } else {

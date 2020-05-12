@@ -37,6 +37,8 @@ require('./routes/user/uploadUserImage')(app);
 require('./routes/recipe/getRecipes')(app);
 require('./routes/recipe/addRecipe')(app);
 require('./routes/recipe/viewRecipe')(app);
+require('./routes/recipe/addRating')(app);
+require('./routes/recipe/getRating')(app);
 
 require('./routes/recipe/getUserRecipes')(app);
 
