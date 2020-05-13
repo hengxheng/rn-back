@@ -1,5 +1,6 @@
 import passport from "passport";
 import Models from "../../../models";
+import Sequelize from "sequelize";
 
 const Recipe = Models.Recipe;
 const RecipeImage = Models.RecipeImage;
@@ -34,18 +35,26 @@ module.exports = (app) => {
 
           let rating = null;
           if (recipe) {
-            const like = await Rating.count({
+            const rates = await Rating.findAll({
+              attributes: [
+                "rating",
+                [Sequelize.fn("count", "id"), "totalCount"],
+              ],
               where: {
                 r_id: recipe.id,
-                rating: 1,
               },
+              group: ["rating"],
+              raw: true, // important for count
             });
 
-            const dislike = await Rating.count({
-              where: {
-                r_id: recipe.id,
-                rating: 2,
-              },
+            let like = 0;
+            let dislike = 0;
+            rates.map((r) => {
+              if (r.rating == 1) {
+                like = r.totalCount;
+              } else if (r.rating == 2) {
+                dislike = r.totalCount;
+              }
             });
 
             rating = {
