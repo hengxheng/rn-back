@@ -4,7 +4,7 @@ import Models from "../../../models";
 const Comment = Models.Comment;
 
 module.exports = (app) => {
-  app.post("/recipe/comment/add", (req, res, next) => {
+  app.post("/recipe/comment/delete", (req, res, next) => {
     passport.authenticate(
       "jwt",
       { session: false },
@@ -22,32 +22,23 @@ module.exports = (app) => {
             const user_id = user.id;
             const commentId = req.body.commentId;
             const recipeId = req.body.recipeId;
-            const content = req.body.comment;
 
             let comment = null;
-            if(commentId){
-                comment = await Comment.findOne({
-                    where: { id: commentId, user_id: user_id },
-                  });
-
-                  if (comment) {
-                    comment.content = content;
-                    await comment.save();
-                  } 
-            }
-            else {
-              comment = await Comment.create({
-                user_id,
-                r_id: recipeId,
-                content
+            if (commentId) {
+              comment = await Comment.findOne({
+                where: { id: commentId, r_id: recipeId, user_id: user_id },
               });
+
+              if (comment) {
+                await comment.destroy();
+              }
             }
 
             res.status(200).send({
               auth: true,
-              message: "Comment is created/updated",
+              message: "Comment is deleted",
               data: {
-                comment
+                comment,
               },
             });
           } catch (e) {

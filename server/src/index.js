@@ -39,7 +39,9 @@ require('./routes/recipe/addRecipe')(app);
 require('./routes/recipe/viewRecipe')(app);
 require('./routes/recipe/addRating')(app);
 require('./routes/recipe/getRating')(app);
-
+require('./routes/recipe/addComment')(app);
+require('./routes/recipe/getComments')(app);
+require('./routes/recipe/deleteComment')(app);
 require('./routes/recipe/getUserRecipes')(app);
 
 // starting the server
