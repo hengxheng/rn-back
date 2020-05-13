@@ -26,8 +26,7 @@ module.exports = (app) => {
             nickname: req.body.nickname,
             email: req.body.email,
           };
-          
-          console.log(updateData);
+
           if(req.body.password){
             const hashedPassword = await bcrypt.hash(req.body.password, BCRYPT_SALT_ROUNDS);
             updateData = { ...updateData, password: hashedPassword }
