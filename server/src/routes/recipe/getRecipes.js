@@ -30,6 +30,7 @@ module.exports = (app) => {
             },
             {
               model: User,
+              attributes: ["id", "firstName", "lastName", "nickname", "image"],
             },
           ],
           // where:{

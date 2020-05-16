@@ -6,6 +6,7 @@ const Recipe = Models.Recipe;
 const RecipeImage = Models.RecipeImage;
 const Tag = Models.Tag;
 const Rating = Models.Rating;
+const User = Models.User;
 module.exports = (app) => {
   app.get("/recipe/:id", (req, res, next) => {
     passport.authenticate(
@@ -21,6 +22,10 @@ module.exports = (app) => {
         } else {
           const recipe = await Recipe.findOne({
             include: [
+              {
+                model: User,
+                attributes: ["id", "firstName", "lastName", "nickname", "image"],
+              },
               {
                 model: RecipeImage,
               },
@@ -63,7 +68,7 @@ module.exports = (app) => {
             };
           }
 
-          res.status(200).send({ auth: true, recipe: recipe, rating: rating });
+          res.status(200).send({ auth: true, data: recipe, rating: rating });
         }
       }
     )(req, res, next);

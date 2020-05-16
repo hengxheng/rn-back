@@ -44,6 +44,9 @@ require('./routes/recipe/getComments')(app);
 require('./routes/recipe/deleteComment')(app);
 require('./routes/recipe/getUserRecipes')(app);
 
+require('./routes/message/sendMessage')(app);
+require('./routes/message/getMessages')(app);
+require('./routes/message/getContacts')(app);
 // starting the server
 app.listen(3000, () => {
   console.log('listening on port 3000');
