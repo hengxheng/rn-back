@@ -8,7 +8,6 @@ const User = Models.User;
 
 module.exports = app => {
   app.post('/register', (req, res, next) => {
-      console.log(req.body);
     passport.authenticate('register', (err, user, info) => {
       if (err) {
         console.error(err);

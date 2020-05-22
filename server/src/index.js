@@ -30,6 +30,7 @@ app.use(express.static('public'));
 require('./routes/user/getUsers')(app);
 require('./routes/user/login')(app);
 require('./routes/user/register')(app);
+require('./routes/user/googleLogin')(app);
 
 require('./routes/user/updateUser')(app);
 require('./routes/user/uploadUserImage')(app);
